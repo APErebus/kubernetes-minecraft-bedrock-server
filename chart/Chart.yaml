@@ -1,0 +1,6 @@
+apiVersion: v2
+name: minecraft-bds
+description: A chart to install a Minecraft Bedrock Dedicated Server
+type: application
+version: 0.1.0
+appVersion: "2025.5.0"
