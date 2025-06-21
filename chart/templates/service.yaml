@@ -5,7 +5,7 @@ metadata:
   labels:
     {{- include "minecraft-bedrock-server.labels" . | nindent 4 }}
 spec:
-  type: NodePort
+  type: ClusterPort
   ports:
     - port: 19132
       protocol: UDP
