@@ -42,12 +42,7 @@ spec:
           livenessProbe: *probe
           tty: true
           stdin: true
-  volumeClaimTemplates:
-    - metadata:
-        name: data
-      spec:
-        accessModes:
-          - ReadWriteOnce
-        resources:
-          requests:
-            storage: 1Gi
+  volumes:
+  - name: data
+    emptyDir:
+      sizeLimit: 1Gi
