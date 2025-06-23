@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  labels:
+    app: minecraft-bds
+  name: minecraft-bds
+  namespace: minecraft-bds
+spec:
+  # never more than 1 since BDS is not horizontally scalable
+  replicas: 1
+  serviceName: bds
+  selector:
+    matchLabels:
+      app: minecraft-bds
+  template:
+    metadata:
+      labels:
+        app: minecraft-bds
+    spec:
+      containers:
+        - name: main
+          image: docker.io/itzg/minecraft-bedrock-server:2025.6.0
+          imagePullPolicy: IfNotPresent
+          envFrom:
+            - configMapRef:
+                name: minecraft-bds
+          volumeMounts:
+            - mountPath: /data
+              name: data
+          ports:
+            - containerPort: 19132
+              protocol: UDP
+          readinessProbe: &probe
+            exec:
+              command:
+                - mc-monitor
+                - status-bedrock
+                - --host
+                # force health check against IPv4 port
+                - 127.0.0.1
+            initialDelaySeconds: 30
+          livenessProbe: *probe
+          tty: true
+          stdin: true
+      volumes:
+      - name: data
+        emptyDir:
+          sizeLimit: 1Gi
